@@ -1,36 +1,42 @@
 {
-    "manifestVersion": 1,
-    "id": "build-release-task",
-    "name": "Selective Checkout",
-    "version": "0.0.4",
-    "publisher": "SebastianMechelke",
-    "targets": [
-        {
-            "id": "Microsoft.VisualStudio.Services"
-        }
-    ],    
-    "description": "Avoid huge downloads. Only checkout the files you need for your build or release.",
-    "categories": [
-        "Azure Pipelines"
-    ],
-    "icons": {
-        "default": "images/extension_icon.png"        
-    },
-    "files": [
-        {
-            "path": "buildandreleasetask"
-        }
-    ],
-    "contributions": [
-        {
-            "id": "selective-checkout-task",
-            "type": "ms.vss-distributed-task.task",
-            "targets": [
-                "ms.vss-distributed-task.tasks"
-            ],
-            "properties": {
-                "name": "buildandreleasetask"
-            }
-        }
-    ]
+  "manifestVersion": 1,
+  "id": "GetFolderContent",
+  "name": "Get Folder Content",
+  "version": "1.0.0",
+  "publisher": "SebastianMechelke",
+  "targets": [
+    {
+      "id": "Microsoft.VisualStudio.Services"
+    }
+  ],
+  "description": "This task print out the content of the given directory",
+  "public": false,
+  "categories": [
+    "Azure Pipelines"
+  ],
+  "content": {
+    "details": {
+      "path": "Marketplace.md"
+    }
+  },
+  "icons": {
+    "default": "Images/icon.png"
+  },
+  "files": [
+    {
+      "path": "Tasks/GetFolderContent"
+    }
+  ],
+  "contributions": [
+    {
+      "id": "GetFolderContent",
+      "type": "ms.vss-distributed-task.task",
+      "targets": [
+        "ms.vss-distributed-task.tasks"
+      ],
+      "properties": {
+        "name": "Tasks/GetFolderContent"
+      }
+    }
+  ]
 }
