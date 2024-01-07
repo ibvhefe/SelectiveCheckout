@@ -10,7 +10,7 @@
     "version": {
         "Major": 0,
         "Minor": 1,
-        "Patch": 18
+        "Patch": 21
     },
     "instanceNameFormat": "Instance_Name_Format",
     "inputs": [
@@ -20,7 +20,15 @@
             "label": "paths to checkout",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "paths, relative to the repository root. One path per line."
+            "helpMarkDown": "Paths, relative to the repository root. One path per line."
+        },
+        {
+            "name": "fetchDepth",
+            "type": "string",
+            "label": "fetch depth",
+            "defaultValue": "1",
+            "required": false,
+            "helpMarkDown": "The depth parameter is a number greater than 0 that specifies how deep you want to do sparse-checkout. The default is 1, which clones only the immediate files and folders at the root of the repository. A value of 0 means all history is cloned."
         }
     ],
     "execution": {

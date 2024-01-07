@@ -6,7 +6,23 @@ const fs = require("fs");
 function run() {
     try {
         const pathsToCheckout = tl.getInput('pathsToCheckout', true);
+        let fetchDepth = tl.getInput('fetchDepth', false);
         let repositoryUri = tl.getVariable('Build.Repository.Uri');
+        // Parameter validation.
+        if (!fetchDepth) {
+            console.log('No fetch depth was given, using default of 1');
+            fetchDepth = '1';
+        }
+        if (fetchDepth) {
+            if (isNaN(Number(fetchDepth))) {
+                tl.setResult(tl.TaskResult.Failed, 'Fetch depth is not a number');
+                return;
+            }
+            if (Number(fetchDepth) < 0) {
+                tl.setResult(tl.TaskResult.Failed, 'Fetch depth is less than 0');
+                return;
+            }
+        }
         if (pathsToCheckout == 'bad') {
             tl.setResult(tl.TaskResult.Failed, 'Bad input was given');
             return;
@@ -23,6 +39,7 @@ function run() {
             tl.setResult(tl.TaskResult.Failed, 'Build.Repository.LocalPath is not set');
             return;
         }
+        // Checkout.
         const repoPath = tl.getVariable('Build.Repository.LocalPath');
         if (repoPath) {
             if (!fs.existsSync(repoPath)) {
@@ -51,7 +68,7 @@ function run() {
         }
         executeCommand(`git remote add -f origin https://${accessToken}@${repositoryUri}`);
         const sourceBranch = tl.getVariable('Build.SourceBranch');
-        executeCommand(`git pull origin ${sourceBranch} --depth=1`);
+        executeCommand(`git pull origin ${sourceBranch} --depth=${fetchDepth}`);
     }
     catch (err) {
         tl.setResult(tl.TaskResult.Failed, err.message);
