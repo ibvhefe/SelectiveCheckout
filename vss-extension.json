@@ -1,42 +1,36 @@
 {
-  "manifestVersion": 1,
-  "id": "GetFolderContent",
-  "name": "Get Folder Content",
-  "version": "1.0.0",
-  "publisher": "SebastianMechelke",
-  "targets": [
-    {
-      "id": "Microsoft.VisualStudio.Services"
-    }
-  ],
-  "description": "This task print out the content of the given directory",
-  "public": false,
-  "categories": [
-    "Azure Pipelines"
-  ],
-  "content": {
-    "details": {
-      "path": "Marketplace.md"
-    }
-  },
-  "icons": {
-    "default": "Images/icon.png"
-  },
-  "files": [
-    {
-      "path": "Tasks/GetFolderContent"
-    }
-  ],
-  "contributions": [
-    {
-      "id": "GetFolderContent",
-      "type": "ms.vss-distributed-task.task",
-      "targets": [
-        "ms.vss-distributed-task.tasks"
-      ],
-      "properties": {
-        "name": "Tasks/GetFolderContent"
-      }
-    }
-  ]
+    "manifestVersion": 1,
+    "id": "SelectiveCheckout",
+    "name": "Selective Checkout",
+    "version": "0.0.40",
+    "publisher": "SebastianMechelke",
+    "targets": [
+        {
+            "id": "Microsoft.VisualStudio.Services"
+        }
+    ],    
+    "description": "A build task that can be used to only checkout a specific folder from a git repository.",
+    "categories": [
+        "Azure Pipelines"
+    ],
+    "icons": {
+        "default": "images/extension-icon.png"        
+    },
+    "files": [
+        {
+            "path": "buildandreleasetask"
+        }
+    ],
+    "contributions": [
+        {
+            "id": "selective-checkout-task",
+            "type": "ms.vss-distributed-task.task",
+            "targets": [
+                "ms.vss-distributed-task.tasks"
+            ],
+            "properties": {
+                "name": "buildandreleasetask"
+            }
+        }
+    ]
 }
