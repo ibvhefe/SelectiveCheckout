@@ -1,6 +1,6 @@
 # Selective Checkout for Azure DevOps
 
-This extension contains a pipeline task that allows for "slim" git checkouts.
+This extension contains a pipeline task that allows for *slim* git checkouts.
 You can select what folders you want to download.
 This keeps your traffic low and your build times fast.
 
