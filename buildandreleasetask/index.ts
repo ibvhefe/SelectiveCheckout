@@ -1,6 +1,7 @@
 import tl = require('azure-pipelines-task-lib/task');
 import { execSync } from 'child_process';
 import fs = require('fs');
+import * as path from 'path';
 
 function run() {
     try {
@@ -40,7 +41,6 @@ function run() {
             return;
         }
 
-
         // Checkout.
         const repoPath = tl.getVariable('Build.Repository.LocalPath');
         if (repoPath) {
@@ -56,17 +56,21 @@ function run() {
             console.error('Build.Repository.LocalPath is not set');
             return;
         }
+
+
         process.chdir(repoPath);
 
-        executeCommand('git init');
+        var response = executeCommand('git init');
+        if(response.includes('existing Git repository')) {
+            tl.setResult(tl.TaskResult.Failed, 'Repository already exists. Set "checkout:none" in previous checkout task to avoid this error.');
+            return;
+        }
 
         executeCommand('git config core.sparsecheckout true');
 
         for (const path of pathsToCheckout.split('\n')) {
             executeCommand(`echo ${path} >> .git/info/sparse-checkout`);
         }
-
-        executeCommand('git remote remove origin');
 
         const accessToken = tl.getVariable('System.AccessToken');
         const start = repositoryUri.indexOf('dev.azure.com');
@@ -87,6 +91,7 @@ function executeCommand(command: string) {
     console.log('##[command]' + command);
     const response = execSync(command).toString();
     console.log(response);
+    return response;
 }
 
 run();

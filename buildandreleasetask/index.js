@@ -55,12 +55,15 @@ function run() {
             return;
         }
         process.chdir(repoPath);
-        executeCommand('git init');
+        var response = executeCommand('git init');
+        if (response.includes('existing Git repository')) {
+            tl.setResult(tl.TaskResult.Failed, 'Repository already exists. Set "checkout:none" in previous checkout task to avoid this error.');
+            return;
+        }
         executeCommand('git config core.sparsecheckout true');
         for (const path of pathsToCheckout.split('\n')) {
             executeCommand(`echo ${path} >> .git/info/sparse-checkout`);
         }
-        executeCommand('git remote remove origin');
         const accessToken = tl.getVariable('System.AccessToken');
         const start = repositoryUri.indexOf('dev.azure.com');
         if (start !== -1) {
@@ -78,5 +81,6 @@ function executeCommand(command) {
     console.log('##[command]' + command);
     const response = (0, child_process_1.execSync)(command).toString();
     console.log(response);
+    return response;
 }
 run();
