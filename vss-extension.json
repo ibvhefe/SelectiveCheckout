@@ -2,8 +2,29 @@
     "manifestVersion": 1,
     "id": "SelectiveCheckout",
     "name": "Selective Checkout",
-    "version": "0.0.55",
+    "version": "0.0.56",
     "publisher": "SebastianMechelke",
+    "galleryFlags": [
+        "Public",
+        "Preview"
+    ],
+    "tags": [
+        "git",
+        "checkout",
+        "selective",
+        "folder",
+        "subfolder",
+        "partial"
+    ],
+    "repository": {
+        "type": "git",
+        "uri": "https://github.com/ibvhefe/SelectiveCheckout"
+    },
+    "content": {
+        "details": {
+            "path": "README.md"
+        }
+    },
     "targets": [
         {
             "id": "Microsoft.VisualStudio.Services"

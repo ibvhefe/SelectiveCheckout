@@ -73,9 +73,13 @@ function run() {
         }
 
         const accessToken = tl.getVariable('System.AccessToken');
-        const start = repositoryUri.indexOf('dev.azure.com');
-        if (start !== -1) {
-            repositoryUri = repositoryUri.substring(start);
+        const startAzure = repositoryUri.indexOf('dev.azure.com');
+        if (startAzure !== -1) {
+            repositoryUri = repositoryUri.substring(startAzure);
+        }
+        const startGithub = repositoryUri.indexOf('github.com');
+        if (startGithub !== -1) {
+            repositoryUri = repositoryUri.substring(startGithub);
         }
         executeCommand(`git remote add -f origin https://${accessToken}@${repositoryUri}`);
 
