@@ -15,7 +15,30 @@ steps:
     pathsToCheckout: 'path/to/download'
 ```
 
-Besides *pathsToCheckout*, *fetchDepth* is also supported.
+For multiple paths:
+
+```yaml
+steps:
+- checkout: none
+
+- task: SelectiveCheckout@0
+  inputs:
+    pathsToCheckout: |
+      path/to/download/1
+      path/to/download/2
+```
+
+If a shallow clone is not wanted:
+
+```yaml
+steps:
+- checkout: none
+
+- task: SelectiveCheckout@0
+  inputs:
+    pathsToCheckout: 'path/to/download'
+    fetchDepth: 0 # The same semantics as the normal checkout task.
+```
 
 ## Limitations
 

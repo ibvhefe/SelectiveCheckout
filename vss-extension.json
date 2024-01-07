@@ -2,7 +2,7 @@
     "manifestVersion": 1,
     "id": "SelectiveCheckout",
     "name": "Selective Checkout",
-    "version": "0.0.56",
+    "version": "0.0.57",
     "publisher": "SebastianMechelke",
     "galleryFlags": [
         "Public",
