@@ -84,7 +84,7 @@ function run() {
         executeCommand(`git remote add -f origin https://${accessToken}@${repositoryUri}`);
 
         const sourceBranch = tl.getVariable('Build.SourceBranch');
-        executeCommand(`git pull origin ${sourceBranch} --depth=${fetchDepth}`);
+        executeCommand(`git pull origin ${sourceBranch} --no-tags --prune --prunte-tags --progress --no-recuse-submodules --single-branch --depth=${fetchDepth}`);
     }
     catch (err: any) {
         tl.setResult(tl.TaskResult.Failed, err.message);
