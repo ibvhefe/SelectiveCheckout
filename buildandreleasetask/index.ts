@@ -57,20 +57,7 @@ function run() {
             return;
         }
 
-
-        process.chdir(repoPath);
-
-        var response = executeCommand('git init');
-        if(response.includes('existing Git repository')) {
-            tl.setResult(tl.TaskResult.Failed, 'Repository already exists. Set "checkout:none" in previous checkout task to avoid this error.');
-            return;
-        }
-
-        executeCommand('git config core.sparsecheckout true');
-
-        for (const path of pathsToCheckout.split('\n')) {
-            executeCommand(`echo ${path} >> .git/info/sparse-checkout`);
-        }
+        process.chdir(repoPath);        
 
         const accessToken = tl.getVariable('System.AccessToken');
         const startAzure = repositoryUri.indexOf('dev.azure.com');
@@ -81,15 +68,27 @@ function run() {
         if (startGithub !== -1) {
             repositoryUri = repositoryUri.substring(startGithub);
         }
-        executeCommand(`git remote add -f origin https://${accessToken}@${repositoryUri}`);
+        const sourceBranch = convertRefToBranch(tl.getVariable('Build.SourceBranch') || '');
 
-        const sourceBranch = tl.getVariable('Build.SourceBranch');
-        executeCommand(`git pull origin ${sourceBranch} --no-tags --prune --prunte-tags --progress --no-recuse-submodules --single-branch --depth=${fetchDepth}`);
+        executeCommand(`git version`);
+        executeCommand(`git clone --filter=tree:0 --no-checkout --depth ${fetchDepth} --sparse --no-tags -b ${sourceBranch} --progress --no-recurse-submodules https://${accessToken}@${repositoryUri}`);
+        
+        const projectName = tl.getVariable('Build.Repository.Name');
+        process.chdir(`${projectName}`);
+        for (const path of pathsToCheckout.split('\n')) {
+            executeCommand(`git sparse-checkout add "${path}"`);
+        }
+        
+        executeCommand(`git checkout`);
     }
     catch (err: any) {
         tl.setResult(tl.TaskResult.Failed, err.message);
     }
 }
+
+function convertRefToBranch(ref: string) {
+    return ref.replace('refs/heads/', '');
+  }
 
 function executeCommand(command: string) {
     console.log('##[command]' + command);

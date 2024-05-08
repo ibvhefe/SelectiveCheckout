@@ -6,7 +6,7 @@ This keeps your traffic low and your build times short.
 
 ## Requirements
 
-[Git](https://git-scm.com/downloads) needs to be installed on the build agent.
+[Git v2.37.1+](https://git-scm.com/downloads) needs to be installed on the build agent.
 
 ## Usage
 
