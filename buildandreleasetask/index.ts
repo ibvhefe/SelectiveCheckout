@@ -1,7 +1,6 @@
 import tl = require('azure-pipelines-task-lib/task');
 import { execSync } from 'child_process';
 import fs = require('fs');
-import * as path from 'path';
 
 function run() {
     try {
@@ -57,8 +56,7 @@ function run() {
             return;
         }
 
-        process.chdir(repoPath);        
-
+        process.chdir(repoPath);
         const accessToken = tl.getVariable('System.AccessToken');
         const startAzure = repositoryUri.indexOf('dev.azure.com');
         if (startAzure !== -1) {
@@ -71,15 +69,16 @@ function run() {
         const sourceBranch = convertRefToBranch(tl.getVariable('Build.SourceBranch') || '');
 
         executeCommand(`git version`);
-        executeCommand(`git clone --filter=tree:0 --no-checkout --depth ${fetchDepth} --sparse --no-tags -b ${sourceBranch} --progress --no-recurse-submodules https://${accessToken}@${repositoryUri}`);
-        
-        const projectName = tl.getVariable('Build.Repository.Name');
-        process.chdir(`${projectName}`);
-        for (const path of pathsToCheckout.split('\n')) {
-            executeCommand(`git sparse-checkout add "${path}"`);
+        var response = executeCommand(`git clone --filter=tree:0 --no-checkout --depth ${fetchDepth} --sparse --no-tags --progress --no-recurse-submodules https://${accessToken}@${repositoryUri} .`);
+        if (response.includes('existing Git repository')) {
+            tl.setResult(tl.TaskResult.Failed, 'Repository already exists. Set "checkout:none" in previous checkout task to avoid this error.');
+            return;
         }
-        
-        executeCommand(`git checkout`);
+        for (const path of pathsToCheckout.split('\n')) {
+            executeCommand(`git sparse-checkout add ${path}`);
+        }
+        executeCommand(`git fetch origin ${sourceBranch}:local`);
+        executeCommand(`git checkout local`);
     }
     catch (err: any) {
         tl.setResult(tl.TaskResult.Failed, err.message);
