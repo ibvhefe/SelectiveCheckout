@@ -10,7 +10,7 @@
     "version": {
         "Major": 0,
         "Minor": 2,
-        "Patch": 33
+        "Patch": 64
     },
     "instanceNameFormat": "Instance_Name_Format",
     "inputs": [

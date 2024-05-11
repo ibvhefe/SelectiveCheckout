@@ -16,7 +16,7 @@ steps:
 
 - task: SelectiveCheckout@0
   inputs:
-    pathsToCheckout: '/path/to/download/*'
+    pathsToCheckout: 'path/to/download'
 ```
 
 For multiple paths:
@@ -28,21 +28,9 @@ steps:
 - task: SelectiveCheckout@0
   inputs:
     pathsToCheckout: |
-      /path/to/download/1/*
-      /path/to/download/2/*
+      path/to/download/1/
+      path/to/download/2/
 ```
-
-For folder exclusion:
-
-```yaml
-steps:
-- checkout: none
-
-- task: SelectiveCheckout@0
-  inputs:
-    pathsToCheckout: '!/folder/to/exclude/*'
-```
-
 
 If a shallow clone is not wanted:
 
@@ -52,8 +40,20 @@ steps:
 
 - task: SelectiveCheckout@0
   inputs:
-    pathsToCheckout: '/path/to/download/*'
+    pathsToCheckout: 'path/to/download/*'
     fetchDepth: 0 # The same semantics as the normal checkout task.
+```
+
+If lfs support is needed
+
+```yaml
+steps:
+- checkout: none
+
+- task: SelectiveCheckout@0
+  inputs:
+    pathsToCheckout: 'path/to/download/*'
+    lfs: 'true'
 ```
 
 ## Limitations
