@@ -44,18 +44,6 @@ steps:
     fetchDepth: 0 # The same semantics as the normal checkout task.
 ```
 
-If lfs support is needed
-
-```yaml
-steps:
-- checkout: none
-
-- task: SelectiveCheckout@0
-  inputs:
-    pathsToCheckout: 'path/to/download/*'
-    lfs: 'true'
-```
-
 ## Limitations
 
 - Only Github and Azure Devops repositories are supported.
