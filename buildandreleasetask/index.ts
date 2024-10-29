@@ -69,7 +69,11 @@ function run() {
         const sourceBranch = convertRefToBranch(tl.getVariable('Build.SourceBranch') || '');
 
         executeCommand(`git version`);
-        var response = executeCommand(`git clone --filter=tree:0 --no-checkout --depth ${fetchDepth} --sparse --no-tags --progress --no-recurse-submodules https://${accessToken}@${repositoryUri} .`);
+        let cloneCommand = `git clone --filter=tree:0 --no-checkout --sparse --no-tags --progress --no-recurse-submodules https://${accessToken}@${repositoryUri} .`;
+        if (Number(fetchDepth) > 0) {
+            cloneCommand = `git clone --filter=tree:0 --no-checkout --depth ${fetchDepth} --sparse --no-tags --progress --no-recurse-submodules https://${accessToken}@${repositoryUri} .`;
+        }
+        const response = executeCommand(cloneCommand);
         if (response.includes('existing Git repository')) {
             tl.setResult(tl.TaskResult.Failed, 'Repository already exists. Set "checkout:none" in previous checkout task to avoid this error.');
             return;
