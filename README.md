@@ -44,11 +44,25 @@ steps:
     fetchDepth: 0 # The same semantics as the normal checkout task.
 ```
 
+To fetch Git tags:
+
+```yaml
+steps:
+- checkout: none
+
+- task: SelectiveCheckout@0
+  inputs:
+    pathsToCheckout: 'path/to/download/*'
+    fetchTags: true
+```
+
+`fetchTags` defaults to `false` to minimize downloaded data. Set it to `true` to fetch all repository tags, for example when deriving a version from `git describe`.
+
 ## Limitations
 
 - Only Github and Azure Devops repositories are supported.
 - No multiple repository support.
 - No Team Foundation Version Control (TFVS) support.
-- No advanced further checkout parameters, like fetchTags or clean
+- No advanced further checkout parameters, like clean
 
 If you need more features, feel free to contact me.

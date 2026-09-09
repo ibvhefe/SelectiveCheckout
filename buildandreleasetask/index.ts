@@ -6,6 +6,7 @@ function run() {
     try {
         const pathsToCheckout: string | undefined = tl.getInput('pathsToCheckout', true);
         let fetchDepth: string | undefined = tl.getInput('fetchDepth', false);
+        const fetchTags = tl.getBoolInput('fetchTags', false);
         let repositoryUri = tl.getVariable('Build.Repository.Uri');
 
         // Parameter validation.
@@ -67,9 +68,11 @@ function run() {
             repositoryUri = repositoryUri.substring(startGithub);
         }
         const sourceBranch = convertRefToBranch(tl.getVariable('Build.SourceBranch') || '');
+        const cloneTagOption = fetchTags ? '' : ' --no-tags';
+        const fetchTagOption = fetchTags ? ' --tags' : ' --no-tags';
 
         executeCommand(`git version`);
-        var response = executeCommand(`git clone --filter=tree:0 --no-checkout --depth ${fetchDepth} --sparse --no-tags --progress --no-recurse-submodules https://${accessToken}@${repositoryUri} .`);
+        var response = executeCommand(`git clone --filter=tree:0 --no-checkout --depth ${fetchDepth} --sparse${cloneTagOption} --progress --no-recurse-submodules https://${accessToken}@${repositoryUri} .`);
         if (response.includes('existing Git repository')) {
             tl.setResult(tl.TaskResult.Failed, 'Repository already exists. Set "checkout:none" in previous checkout task to avoid this error.');
             return;
@@ -77,7 +80,7 @@ function run() {
         for (const path of pathsToCheckout.split('\n')) {
             executeCommand(`git sparse-checkout add ${path}`);
         }
-        executeCommand(`git fetch origin ${sourceBranch}:local`);
+        executeCommand(`git fetch${fetchTagOption} origin ${sourceBranch}:local`);
         executeCommand(`git checkout local`);
     }
     catch (err: any) {

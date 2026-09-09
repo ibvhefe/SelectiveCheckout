@@ -10,7 +10,7 @@
     "version": {
         "Major": 0,
         "Minor": 2,
-        "Patch": 65
+        "Patch": 66
     },
     "instanceNameFormat": "Instance_Name_Format",
     "inputs": [
@@ -29,6 +29,14 @@
             "defaultValue": "1",
             "required": false,
             "helpMarkDown": "The depth parameter is a number greater than 0 that specifies how deep you want to do sparse-checkout. The default is 1, which clones only the immediate files and folders at the root of the repository. A value of 0 means all history is cloned."
+        },
+        {
+            "name": "fetchTags",
+            "type": "boolean",
+            "label": "fetch tags",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Fetch all tags from the remote repository. The default is false to reduce the amount of data downloaded."
         }
     ],
     "execution": {
