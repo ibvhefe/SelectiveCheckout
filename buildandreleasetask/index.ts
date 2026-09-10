@@ -68,11 +68,13 @@ function run() {
             repositoryUri = repositoryUri.substring(startGithub);
         }
         const sourceBranch = convertRefToBranch(tl.getVariable('Build.SourceBranch') || '');
+        const cloneDepthOption = fetchDepth === '0' ? '' : ` --depth ${fetchDepth}`;
         const cloneTagOption = fetchTags ? '' : ' --no-tags';
         const fetchTagOption = fetchTags ? ' --tags' : ' --no-tags';
 
+        console.log('Fetch tags:', fetchTags);
         executeCommand(`git version`);
-        var response = executeCommand(`git clone --filter=tree:0 --no-checkout --depth ${fetchDepth} --sparse${cloneTagOption} --progress --no-recurse-submodules https://${accessToken}@${repositoryUri} .`);
+        var response = executeCommand(`git clone --filter=tree:0 --no-checkout${cloneDepthOption} --sparse${cloneTagOption} --progress --no-recurse-submodules https://${accessToken}@${repositoryUri} .`);
         if (response.includes('existing Git repository')) {
             tl.setResult(tl.TaskResult.Failed, 'Repository already exists. Set "checkout:none" in previous checkout task to avoid this error.');
             return;
