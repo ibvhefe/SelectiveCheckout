@@ -65,13 +65,21 @@ function run() {
         if (startGithub !== -1) {
             repositoryUri = repositoryUri.substring(startGithub);
         }
+        let cloneUrl = `https://${accessToken}@${repositoryUri}`;
+        if (startGithub === -1) {
+            // Credentials in the URL are dropped when Azure DevOps redirects; an auth header is kept.
+            process.env['GIT_CONFIG_COUNT'] = '1';
+            process.env['GIT_CONFIG_KEY_0'] = 'http.extraheader';
+            process.env['GIT_CONFIG_VALUE_0'] = `AUTHORIZATION: bearer ${accessToken}`;
+            cloneUrl = `https://${repositoryUri}`;
+        }
         const sourceBranch = convertRefToBranch(tl.getVariable('Build.SourceBranch') || '');
         const cloneDepthOption = fetchDepth === '0' ? '' : ` --depth ${fetchDepth}`;
         const cloneTagOption = fetchTags ? '' : ' --no-tags';
         const fetchTagOption = fetchTags ? ' --tags' : ' --no-tags';
         console.log('Fetch tags:', fetchTags);
         executeCommand(`git version`);
-        var response = executeCommand(`git clone --filter=tree:0 --no-checkout${cloneDepthOption} --sparse${cloneTagOption} --progress --no-recurse-submodules https://${accessToken}@${repositoryUri} .`);
+        var response = executeCommand(`git clone --filter=tree:0 --no-checkout${cloneDepthOption} --sparse${cloneTagOption} --progress --no-recurse-submodules ${cloneUrl} .`);
         if (response.includes('existing Git repository')) {
             tl.setResult(tl.TaskResult.Failed, 'Repository already exists. Set "checkout:none" in previous checkout task to avoid this error.');
             return;
